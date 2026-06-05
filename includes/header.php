@@ -14,10 +14,7 @@
 <nav class="navbar">
     <div class="navbar-brand">
         <img src="/assets/img/logo.png" alt="MercadoPar">
-        <div class="navbar-brand-text">
-            <span class="logo">MercadoPar</span>
-            <span class="subtitle">Internal Tools</span>
-        </div>
+        <span class="subtitle" style="font-size:13px;opacity:.9;font-weight:500">Internal Tools</span>
     </div>
     <ul class="navbar-menu">
         <li><a href="/index.php" class="<?= basename($_SERVER['PHP_SELF']) === 'index.php' ? 'active' : '' ?>">Dashboard</a></li>
