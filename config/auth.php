@@ -14,7 +14,7 @@ function is_logged_in(): bool {
 
 function require_login(): void {
     if (!is_logged_in()) {
-        header('Location: /login.php');
+        header('Location: /login');
         exit;
     }
 }
@@ -35,7 +35,7 @@ function login(string $email, string $password): bool {
 function logout(): void {
     session_start_safe();
     session_destroy();
-    header('Location: /login.php');
+    header('Location: /login');
     exit;
 }
 
