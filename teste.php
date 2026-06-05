@@ -33,6 +33,8 @@ if (file_exists($envPath)) {
 }
 
 echo "<br><b>PHP Version:</b> " . PHP_VERSION;
+echo "<br><b>App Version:</b> <span style='background:#1a56db;color:#fff;padding:2px 8px;border-radius:4px'>v2.0 — Paraguay</span>";
+echo "<br><b>Deploy:</b> " . date('d/m/Y H:i:s') . " (hora do servidor)";
 
 // Gerador de hash
 echo "<hr><h3>Gerador de Hash</h3>";

@@ -2,14 +2,14 @@
 $pageTitle = 'Dashboard — MercadoPar';
 require_once __DIR__ . '/includes/header.php';
 
-// Totais
+// Totales
 $totalColaboradores = db()->query('SELECT COUNT(*) FROM colaboradores WHERE status = "ativo"')->fetchColumn();
 $totalInativos      = db()->query('SELECT COUNT(*) FROM colaboradores WHERE status = "inativo"')->fetchColumn();
 $totalReceitas      = db()->query('SELECT COALESCE(SUM(valor),0) FROM financeiro WHERE tipo="receita" AND status="pago" AND MONTH(data_pagamento)=MONTH(NOW()) AND YEAR(data_pagamento)=YEAR(NOW())')->fetchColumn();
 $totalDespesas      = db()->query('SELECT COALESCE(SUM(valor),0) FROM financeiro WHERE tipo="despesa" AND status="pago" AND MONTH(data_pagamento)=MONTH(NOW()) AND YEAR(data_pagamento)=YEAR(NOW())')->fetchColumn();
 $pendentes          = db()->query('SELECT COUNT(*) FROM financeiro WHERE status="pendente"')->fetchColumn();
 
-// Próximos vencimentos
+// Próximos vencimientos
 $vencimentos = db()->query(
     'SELECT descricao, tipo, valor, data_vencimento FROM financeiro
      WHERE status = "pendente" AND data_vencimento >= CURDATE()
@@ -29,40 +29,40 @@ $ultimosColaboradores = db()->query(
 <div class="cards-grid">
     <div class="card">
         <div class="card-stat"><?= $totalColaboradores ?></div>
-        <div class="card-label">Colaboradores ativos</div>
+        <div class="card-label">Colaboradores activos</div>
     </div>
     <div class="card">
-        <div class="card-stat" style="color:#057a55">R$ <?= number_format($totalReceitas, 2, ',', '.') ?></div>
-        <div class="card-label">Receitas no mês</div>
+        <div class="card-stat" style="color:#057a55">Gs. <?= number_format($totalReceitas, 0, ',', '.') ?></div>
+        <div class="card-label">Ingresos del mes</div>
     </div>
     <div class="card">
-        <div class="card-stat" style="color:#e02424">R$ <?= number_format($totalDespesas, 2, ',', '.') ?></div>
-        <div class="card-label">Despesas no mês</div>
+        <div class="card-stat" style="color:#e02424">Gs. <?= number_format($totalDespesas, 0, ',', '.') ?></div>
+        <div class="card-label">Egresos del mes</div>
     </div>
     <div class="card">
         <div class="card-stat" style="color:#c27803"><?= $pendentes ?></div>
-        <div class="card-label">Lançamentos pendentes</div>
+        <div class="card-label">Movimientos pendientes</div>
     </div>
 </div>
 
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
     <div>
-        <h2 style="margin-bottom:14px;font-size:16px">Próximos Vencimentos</h2>
+        <h2 style="margin-bottom:14px;font-size:16px">Próximos Vencimientos</h2>
         <div class="table-wrapper">
             <table>
                 <thead>
-                    <tr><th>Descrição</th><th>Tipo</th><th>Valor</th><th>Vencimento</th></tr>
+                    <tr><th>Descripción</th><th>Tipo</th><th>Monto</th><th>Vencimiento</th></tr>
                 </thead>
                 <tbody>
                 <?php if ($vencimentos): foreach ($vencimentos as $v): ?>
                     <tr>
                         <td><?= htmlspecialchars($v['descricao']) ?></td>
-                        <td><span class="badge <?= $v['tipo'] === 'receita' ? 'badge-success' : 'badge-danger' ?>"><?= ucfirst($v['tipo']) ?></span></td>
-                        <td>R$ <?= number_format($v['valor'], 2, ',', '.') ?></td>
+                        <td><span class="badge <?= $v['tipo'] === 'receita' ? 'badge-success' : 'badge-danger' ?>"><?= $v['tipo'] === 'receita' ? 'Ingreso' : 'Egreso' ?></span></td>
+                        <td>Gs. <?= number_format($v['valor'], 0, ',', '.') ?></td>
                         <td><?= date('d/m/Y', strtotime($v['data_vencimento'])) ?></td>
                     </tr>
                 <?php endforeach; else: ?>
-                    <tr><td colspan="4" style="text-align:center;color:#6b7280">Nenhum vencimento próximo</td></tr>
+                    <tr><td colspan="4" style="text-align:center;color:#6b7280">Sin vencimientos próximos</td></tr>
                 <?php endif; ?>
                 </tbody>
             </table>
@@ -70,11 +70,11 @@ $ultimosColaboradores = db()->query(
     </div>
 
     <div>
-        <h2 style="margin-bottom:14px;font-size:16px">Colaboradores Recentes</h2>
+        <h2 style="margin-bottom:14px;font-size:16px">Colaboradores Recientes</h2>
         <div class="table-wrapper">
             <table>
                 <thead>
-                    <tr><th>Nome</th><th>Cargo</th><th>Admissão</th><th>Status</th></tr>
+                    <tr><th>Nombre</th><th>Cargo</th><th>Ingreso</th><th>Estado</th></tr>
                 </thead>
                 <tbody>
                 <?php if ($ultimosColaboradores): foreach ($ultimosColaboradores as $c): ?>
@@ -82,10 +82,10 @@ $ultimosColaboradores = db()->query(
                         <td><?= htmlspecialchars($c['nome']) ?></td>
                         <td><?= htmlspecialchars($c['cargo'] ?? '—') ?></td>
                         <td><?= date('d/m/Y', strtotime($c['data_admissao'])) ?></td>
-                        <td><span class="badge <?= $c['status'] === 'ativo' ? 'badge-success' : 'badge-danger' ?>"><?= ucfirst($c['status']) ?></span></td>
+                        <td><span class="badge <?= $c['status'] === 'ativo' ? 'badge-success' : 'badge-danger' ?>"><?= $c['status'] === 'ativo' ? 'Activo' : 'Inactivo' ?></span></td>
                     </tr>
                 <?php endforeach; else: ?>
-                    <tr><td colspan="4" style="text-align:center;color:#6b7280">Nenhum colaborador cadastrado</td></tr>
+                    <tr><td colspan="4" style="text-align:center;color:#6b7280">Sin colaboradores registrados</td></tr>
                 <?php endif; ?>
                 </tbody>
             </table>

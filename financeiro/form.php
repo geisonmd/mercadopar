@@ -1,5 +1,5 @@
 <?php
-$pageTitle = 'Lançamento Financeiro — MercadoPar';
+$pageTitle = 'Movimiento Financiero — MercadoPar';
 require_once __DIR__ . '/../includes/header.php';
 
 $id = (int)($_GET['id'] ?? 0);
@@ -13,7 +13,6 @@ if ($id) {
     if (!$l) { header('Location: /financeiro/index.php'); exit; }
 }
 
-// Lista colaboradores para vínculo opcional
 $colaboradores = db()->query('SELECT id, nome FROM colaboradores WHERE status="ativo" ORDER BY nome')->fetchAll();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -29,9 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'observacoes'    => trim($_POST['observacoes'] ?? ''),
     ];
 
-    if (!$fields['descricao']) $errors[] = 'Descrição é obrigatória.';
-    if (!$fields['data_vencimento']) $errors[] = 'Data de vencimento é obrigatória.';
-    if ($fields['valor'] <= 0) $errors[] = 'Valor deve ser maior que zero.';
+    if (!$fields['descricao'])       $errors[] = 'La descripción es obligatoria.';
+    if (!$fields['data_vencimento']) $errors[] = 'La fecha de vencimiento es obligatoria.';
+    if ($fields['valor'] <= 0)       $errors[] = 'El monto debe ser mayor a cero.';
 
     if (!$errors) {
         if ($id) {
@@ -51,12 +50,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $l = array_merge($l ?: [], $_POST);
 }
 
-$categorias_receita = ['Salário','Serviços','Venda','Comissão','Outros'];
-$categorias_despesa = ['Folha de Pagamento','Aluguel','Fornecedor','Impostos','Marketing','Outros'];
+$categorias_ingreso = ['Salario','Servicios','Venta','Comisión','Otros'];
+$categorias_egreso  = ['Planilla','Alquiler','Proveedor','Impuestos','Marketing','Otros'];
 ?>
 <div class="page-header">
-    <h1><?= $id ? 'Editar Lançamento' : 'Novo Lançamento' ?></h1>
-    <a href="/financeiro/index.php" class="btn btn-outline">← Voltar</a>
+    <h1><?= $id ? 'Editar Movimiento' : 'Nuevo Movimiento' ?></h1>
+    <a href="/financeiro/index.php" class="btn btn-outline">← Volver</a>
 </div>
 
 <?php foreach ($errors as $e): ?>
@@ -68,44 +67,44 @@ $categorias_despesa = ['Folha de Pagamento','Aluguel','Fornecedor','Impostos','M
         <div class="form-grid">
             <div class="form-group">
                 <label>Tipo *</label>
-                <select name="tipo" id="tipo-select">
-                    <option value="despesa" <?= ($l['tipo'] ?? 'despesa')==='despesa' ? 'selected' : '' ?>>Despesa</option>
-                    <option value="receita" <?= ($l['tipo'] ?? '')==='receita' ? 'selected' : '' ?>>Receita</option>
+                <select name="tipo">
+                    <option value="despesa" <?= ($l['tipo'] ?? 'despesa')==='despesa' ? 'selected' : '' ?>>Egreso</option>
+                    <option value="receita" <?= ($l['tipo'] ?? '')==='receita' ? 'selected' : '' ?>>Ingreso</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>Categoria</label>
+                <label>Categoría</label>
                 <input type="text" name="categoria" list="lista-categorias"
                        value="<?= htmlspecialchars($l['categoria'] ?? '') ?>">
                 <datalist id="lista-categorias">
-                    <?php foreach (array_merge($categorias_receita, $categorias_despesa) as $cat): ?>
+                    <?php foreach (array_merge($categorias_ingreso, $categorias_egreso) as $cat): ?>
                         <option value="<?= htmlspecialchars($cat) ?>">
                     <?php endforeach; ?>
                 </datalist>
             </div>
             <div class="form-group" style="grid-column:1/-1">
-                <label>Descrição *</label>
+                <label>Descripción *</label>
                 <input type="text" name="descricao" required value="<?= htmlspecialchars($l['descricao'] ?? '') ?>">
             </div>
             <div class="form-group">
-                <label>Valor (R$) *</label>
-                <input type="number" name="valor" step="0.01" min="0.01" required
+                <label>Monto (Gs.) *</label>
+                <input type="number" name="valor" step="1" min="1" required
                        value="<?= htmlspecialchars($l['valor'] ?? '') ?>">
             </div>
             <div class="form-group">
-                <label>Data de Vencimento *</label>
+                <label>Fecha de Vencimiento *</label>
                 <input type="date" name="data_vencimento" required
                        value="<?= htmlspecialchars($l['data_vencimento'] ?? date('Y-m-d')) ?>">
             </div>
             <div class="form-group">
-                <label>Data de Pagamento</label>
+                <label>Fecha de Pago</label>
                 <input type="date" name="data_pagamento" value="<?= htmlspecialchars($l['data_pagamento'] ?? '') ?>">
             </div>
             <div class="form-group">
-                <label>Status</label>
+                <label>Estado</label>
                 <select name="status">
-                    <option value="pendente"  <?= ($l['status']??'pendente')==='pendente'  ? 'selected' : '' ?>>Pendente</option>
-                    <option value="pago"      <?= ($l['status']??'')==='pago'      ? 'selected' : '' ?>>Pago</option>
+                    <option value="pendente"  <?= ($l['status']??'pendente')==='pendente'  ? 'selected' : '' ?>>Pendiente</option>
+                    <option value="pago"      <?= ($l['status']??'')==='pago'      ? 'selected' : '' ?>>Pagado</option>
                     <option value="cancelado" <?= ($l['status']??'')==='cancelado' ? 'selected' : '' ?>>Cancelado</option>
                 </select>
             </div>
@@ -121,12 +120,12 @@ $categorias_despesa = ['Folha de Pagamento','Aluguel','Fornecedor','Impostos','M
                 </select>
             </div>
             <div class="form-group" style="grid-column:1/-1">
-                <label>Observações</label>
+                <label>Observaciones</label>
                 <textarea name="observacoes"><?= htmlspecialchars($l['observacoes'] ?? '') ?></textarea>
             </div>
         </div>
         <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Salvar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
             <a href="/financeiro/index.php" class="btn btn-outline">Cancelar</a>
         </div>
     </form>
