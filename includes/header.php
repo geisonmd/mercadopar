@@ -17,7 +17,7 @@
         <span class="subtitle" style="font-size:13px;opacity:.9;font-weight:500">Internal Tools</span>
     </div>
     <ul class="navbar-menu">
-        <li><a href="/index.php" class="<?= basename($_SERVER['PHP_SELF']) === 'index.php' ? 'active' : '' ?>">Dashboard</a></li>
+        <li><a href="/index.php" class="<?= $_SERVER['PHP_SELF'] === '/index.php' ? 'active' : '' ?>">Dashboard</a></li>
         <li><a href="/colaboradores/index.php" class="<?= strpos($_SERVER['PHP_SELF'], '/colaboradores/') !== false ? 'active' : '' ?>">Colaboradores</a></li>
         <li><a href="/financeiro/index.php" class="<?= strpos($_SERVER['PHP_SELF'], '/financeiro/') !== false ? 'active' : '' ?>">Financiero</a></li>
     </ul>
