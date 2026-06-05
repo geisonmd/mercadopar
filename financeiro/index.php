@@ -83,7 +83,7 @@ $meses = ['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','
 <div class="table-wrapper">
     <table>
         <thead>
-            <tr><th>Descripción</th><th>Categoría</th><th>Tipo</th><th>Monto</th><th>Vencimiento</th><th>Pago</th><th>Estado</th><th>Acciones</th></tr>
+            <tr><th>Descripción</th><th>Tipo</th><th>Monto</th><th>Pago</th><th>Estado</th><th>Factura</th><th>Acciones</th></tr>
         </thead>
         <tbody>
         <?php if ($lancamentos): foreach ($lancamentos as $l): ?>
@@ -94,10 +94,8 @@ $meses = ['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','
                         <br><small style="color:#6b7280"><?= htmlspecialchars($l['colaborador_nome']) ?></small>
                     <?php endif; ?>
                 </td>
-                <td><?= htmlspecialchars($l['categoria'] ?? '—') ?></td>
                 <td><span class="badge <?= $l['tipo']==='receita' ? 'badge-success' : 'badge-danger' ?>"><?= $l['tipo']==='receita' ? 'Ingreso' : 'Egreso' ?></span></td>
                 <td>Gs. <?= number_format($l['valor'], 0, ',', '.') ?></td>
-                <td><?= date('d/m/Y', strtotime($l['data_vencimento'])) ?></td>
                 <td><?= $l['data_pagamento'] ? date('d/m/Y', strtotime($l['data_pagamento'])) : '—' ?></td>
                 <td>
                     <?php
@@ -106,6 +104,13 @@ $meses = ['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','
                     $bs = $badgeStatus[$l['status']] ?? 'badge-warning';
                     ?>
                     <span class="badge <?= $bs ?>"><?= $labelStatus[$l['status']] ?? $l['status'] ?></span>
+                </td>
+                <td>
+                    <?php if (!empty($l['factura_pdf'])): ?>
+                        <a href="/financeiro/factura_download?id=<?= $l['id'] ?>" target="_blank" class="btn btn-outline btn-sm">📄 Ver</a>
+                    <?php else: ?>
+                        <span style="color:#d1d5db;font-size:12px">—</span>
+                    <?php endif; ?>
                 </td>
                 <td style="white-space:nowrap">
                     <a href="/financeiro/form.php?id=<?= $l['id'] ?>" class="btn btn-outline btn-sm">Editar</a>
@@ -120,7 +125,7 @@ $meses = ['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','
                 </td>
             </tr>
         <?php endforeach; else: ?>
-            <tr><td colspan="8" style="text-align:center;color:#6b7280;padding:24px">Ningún movimiento encontrado.</td></tr>
+            <tr><td colspan="7" style="text-align:center;color:#6b7280;padding:24px">Ningún movimiento encontrado.</td></tr>
         <?php endif; ?>
         </tbody>
     </table>

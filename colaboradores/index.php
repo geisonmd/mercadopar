@@ -51,9 +51,8 @@ $colaboradores = $stmt->fetchAll();
                 <td><?= $c['salario'] > 0 ? 'Gs. ' . number_format($c['salario'], 0, ',', '.') : '—' ?></td>
                 <td><span class="badge <?= $c['status'] === 'ativo' ? 'badge-success' : 'badge-danger' ?>"><?= $c['status'] === 'ativo' ? 'Activo' : 'Inactivo' ?></span></td>
                 <td style="white-space:nowrap">
-                    <a href="/colaboradores/form.php?id=<?= $c['id'] ?>" class="btn btn-outline btn-sm">Editar</a>
-                    <a href="/colaboradores/contrato.php?id=<?= $c['id'] ?>" class="btn btn-outline btn-sm">Contrato</a>
-                    <a href="/colaboradores/recibos.php?id=<?= $c['id'] ?>" class="btn btn-outline btn-sm">Recibos</a>
+                    <a href="/colaboradores/form?id=<?= $c['id'] ?>" class="btn btn-outline btn-sm">Editar</a>
+                    <a href="/colaboradores/recibos?id=<?= $c['id'] ?>" class="btn btn-outline btn-sm">Recibos</a>
                     <a href="/colaboradores/delete.php?id=<?= $c['id'] ?>"
                        class="btn btn-danger btn-sm"
                        data-confirm="¿Desea eliminar a <?= htmlspecialchars($c['nome']) ?>?">Eliminar</a>

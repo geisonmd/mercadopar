@@ -108,10 +108,10 @@ $liquido_letras = guaraniesALetras($liquido);
         .firma-area {
             display: flex;
             justify-content: space-between;
-            margin-top: 60px;
+            margin-top: 100px;
         }
         .firma-box { text-align: center; width: 44%; }
-        .firma-line { border-top: 1px solid #1f2937; padding-top: 5px; font-size: 12px; }
+        .firma-line { border-top: 1px solid #1f2937; padding-top: 6px; font-size: 12px; }
         @media print {
             .no-print { display: none !important; }
             body { margin: 20px; }
@@ -123,6 +123,10 @@ $liquido_letras = guaraniesALetras($liquido);
 <div class="no-print">
     <button class="btn-print" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
     <a href="javascript:history.back()" class="btn-back">← Volver</a>
+</div>
+
+<div style="margin-bottom:24px">
+    <img src="/assets/img/logo-negro.png" alt="MercadoPar" style="height:48px;width:auto;max-width:200px">
 </div>
 
 <h1>Recibo de pago de salario</h1>
