@@ -98,7 +98,7 @@ $liquido_letras = guaraniesALetras($liquido);
         }
         /* Logo */
         .recibo-logo { margin-bottom: 20px; }
-        .recibo-logo img { height: 40px; width: auto; max-width: 180px; display: block; }
+        .recibo-logo img { width: 180px; height: auto; display: block; }
 
         /* Título */
         h1 { font-size: 20px; font-weight: 700; margin-bottom: 14px; }
@@ -172,7 +172,7 @@ $liquido_letras = guaraniesALetras($liquido);
 <body>
 
 <div class="no-print">
-    <button class="btn-print" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+    <button class="btn-print" onclick="window.print()">Imprimir / Guardar PDF</button>
     <a href="/colaboradores/recibos?id=<?= $r['colaborador_id'] ?>" class="btn-back">← Volver</a>
 </div>
 
