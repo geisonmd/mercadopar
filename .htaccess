@@ -6,14 +6,23 @@ Options -Indexes
     Deny from all
 </FilesMatch>
 
-# Protege pastas internas
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-
-    # Redireciona para login se não autenticado (PHP cuida disso, mas aqui como camada extra)
-    RewriteRule ^$ /index.php [L]
-</IfModule>
-
 # Charset
 AddDefaultCharset UTF-8
 php_value default_charset "UTF-8"
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Raiz → index
+    RewriteRule ^$ /index.php [L]
+
+    # Remove extensão .php das URLs
+    # Evita loop em arquivos que já existem
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}\.php -f
+    RewriteRule ^(.+)$ $1.php [L]
+
+    # Redireciona URL com .php para URL limpa (evita duplicidade)
+    RewriteCond %{THE_REQUEST} \s/+(.+?)\.php[\s?] [NC]
+    RewriteRule ^ /%1 [R=301,L]
+</IfModule>
