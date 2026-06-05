@@ -33,3 +33,16 @@ if (file_exists($envPath)) {
 }
 
 echo "<br><b>PHP Version:</b> " . PHP_VERSION;
+
+// Gerador de hash
+echo "<hr><h3>Gerador de Hash</h3>";
+$senha = $_GET['senha'] ?? '';
+if ($senha) {
+    $hash = password_hash($senha, PASSWORD_DEFAULT);
+    echo "<b>Senha:</b> $senha<br>";
+    echo "<b>Hash:</b> $hash<br><br>";
+    echo "<b>SQL para executar no phpMyAdmin:</b><br>";
+    echo "<textarea style='width:100%;height:80px'>UPDATE users SET password_hash = '$hash' WHERE email = 'admin@mercadopar.com';</textarea>";
+} else {
+    echo '<form>Digite a senha desejada: <input name="senha" type="text"> <button>Gerar</button></form>';
+}
