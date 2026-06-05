@@ -1,0 +1,19 @@
+Options -Indexes
+
+# Protege arquivos sensíveis
+<FilesMatch "\.(env|sql|md|json|lock|git)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Protege pastas internas
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Redireciona para login se não autenticado (PHP cuida disso, mas aqui como camada extra)
+    RewriteRule ^$ /index.php [L]
+</IfModule>
+
+# Charset
+AddDefaultCharset UTF-8
+php_value default_charset "UTF-8"
