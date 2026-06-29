@@ -1,6 +1,6 @@
 <?php
-$pageTitle = 'Colaborador — MercadoPar';
-require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/../config/auth.php';
+require_login();
 
 $id = (int)($_GET['id'] ?? 0);
 $col = [];
@@ -82,6 +82,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $col = array_merge($col ?: [], $_POST);
     $col['contrato_pdf'] = $contrato_pdf;
 }
+
+$pageTitle = 'Colaborador — MercadoPar';
+require_once __DIR__ . '/../includes/header.php';
 
 $moneda = $col['moneda_salario'] ?? 'GS';
 $salario_fmt = '';

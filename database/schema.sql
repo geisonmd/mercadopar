@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS financeiro (
     categoria VARCHAR(100),
     descricao VARCHAR(255) NOT NULL,
     valor DECIMAL(10,2) NOT NULL,
-    data_vencimento DATE NOT NULL,
+    data_vencimento DATE,
     data_pagamento DATE,
     status ENUM('pendente','pago','cancelado') NOT NULL DEFAULT 'pendente',
     colaborador_id INT,
