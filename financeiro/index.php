@@ -9,12 +9,13 @@ $ano    = (int)($_GET['ano'] ?? date('Y'));
 
 $sql = 'SELECT f.*, c.nome as colaborador_nome FROM financeiro f
         LEFT JOIN colaboradores c ON c.id = f.colaborador_id
-        WHERE MONTH(f.data_vencimento)=? AND YEAR(f.data_vencimento)=?';
+        WHERE (MONTH(COALESCE(f.data_vencimento, f.data_pagamento, f.created_at))=?
+           AND YEAR(COALESCE(f.data_vencimento, f.data_pagamento, f.created_at))=?)';
 $params = [$mes, $ano];
 
 if ($tipo)   { $sql .= ' AND f.tipo = ?';   $params[] = $tipo; }
 if ($status) { $sql .= ' AND f.status = ?'; $params[] = $status; }
-$sql .= ' ORDER BY f.data_vencimento ASC';
+$sql .= ' ORDER BY COALESCE(f.data_vencimento, f.data_pagamento, f.created_at) ASC';
 
 $stmt = db()->prepare($sql);
 $stmt->execute($params);
@@ -25,7 +26,9 @@ $totais = db()->prepare(
         SUM(CASE WHEN tipo="receita" AND status="pago" THEN valor ELSE 0 END) as receitas,
         SUM(CASE WHEN tipo="despesa" AND status="pago" THEN valor ELSE 0 END) as despesas,
         SUM(CASE WHEN status="pendente" THEN valor ELSE 0 END) as pendente
-     FROM financeiro WHERE MONTH(data_vencimento)=? AND YEAR(data_vencimento)=?'
+     FROM financeiro
+     WHERE MONTH(COALESCE(data_vencimento, data_pagamento, created_at))=?
+       AND YEAR(COALESCE(data_vencimento, data_pagamento, created_at))=?'
 );
 $totais->execute([$mes, $ano]);
 $totais = $totais->fetch();
