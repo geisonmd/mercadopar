@@ -1,6 +1,6 @@
 <?php
-$pageTitle = 'Movimiento Financiero — MercadoPar';
-require_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/../config/auth.php';
+require_login();
 
 $id = (int)($_GET['id'] ?? 0);
 $l = [];
@@ -79,6 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $l = array_merge($l ?: [], $_POST);
     $l['factura_pdf'] = $factura_pdf;
 }
+
+$pageTitle = 'Movimiento Financiero — MercadoPar';
+require_once __DIR__ . '/../includes/header.php';
 ?>
 <div class="page-header">
     <h1><?= $id ? 'Editar Movimiento' : 'Nuevo Movimiento' ?></h1>
