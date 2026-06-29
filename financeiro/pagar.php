@@ -7,5 +7,5 @@ if ($id) {
         'UPDATE financeiro SET status="pago", data_pagamento=CURDATE() WHERE id=?'
     )->execute([$id]);
 }
-header('Location: /financeiro/index.php');
+header('Location: /financeiro');
 exit;
