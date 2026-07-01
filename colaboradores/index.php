@@ -8,7 +8,7 @@ $search = trim($_GET['q'] ?? '');
 $sql = 'SELECT * FROM colaboradores WHERE status = ?';
 $params = [$status];
 if ($search) {
-    $sql .= ' AND (nome LIKE ? OR cpf LIKE ? OR cargo LIKE ?)';
+    $sql .= ' AND (nome LIKE ? OR ci LIKE ? OR cargo LIKE ?)';
     $params[] = "%$search%"; $params[] = "%$search%"; $params[] = "%$search%";
 }
 $sql .= ' ORDER BY nome ASC';
@@ -44,7 +44,7 @@ $colaboradores = $stmt->fetchAll();
         <?php if ($colaboradores): foreach ($colaboradores as $c): ?>
             <tr>
                 <td><strong><?= htmlspecialchars($c['nome']) ?></strong></td>
-                <td><?= htmlspecialchars($c['cpf']) ?></td>
+                <td><?= htmlspecialchars($c['ci']) ?></td>
                 <td><?= htmlspecialchars($c['cargo'] ?? '—') ?></td>
                 <td><?= htmlspecialchars($c['departamento'] ?? '—') ?></td>
                 <td><?= date('d/m/Y', strtotime($c['data_admissao'])) ?></td>

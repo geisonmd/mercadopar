@@ -4,7 +4,7 @@ require_login();
 
 $recibo_id = (int)($_GET['recibo_id'] ?? 0);
 $stmt = db()->prepare(
-    'SELECT r.*, c.nome, c.cpf, c.cargo, c.departamento
+    'SELECT r.*, c.nome, c.ci, c.cargo, c.departamento
      FROM recibos_salario r JOIN colaboradores c ON c.id = r.colaborador_id
      WHERE r.id = ?'
 );
@@ -190,7 +190,7 @@ $liquido_letras = guaraniesALetras($liquido);
     <span class="lbl">Colaborador:</span>
     <span class="val"><?= htmlspecialchars($r['nome']) ?></span>
     <span class="lbl">C.I.:</span>
-    <span class="val"><?= htmlspecialchars($r['cpf']) ?></span>
+    <span class="val"><?= htmlspecialchars($r['ci']) ?></span>
     <span class="lbl">Cargo:</span>
     <span class="val"><?= htmlspecialchars($r['cargo'] ?? '—') ?></span>
     <span class="lbl">Período:</span>
@@ -261,7 +261,7 @@ $liquido_letras = guaraniesALetras($liquido);
     <div class="firma-box">
         <div class="firma-line">
             <strong><?= htmlspecialchars($r['nome']) ?></strong><br>
-            Colaborador — C.I.: <?= htmlspecialchars($r['cpf']) ?>
+            Colaborador — C.I.: <?= htmlspecialchars($r['ci']) ?>
         </div>
     </div>
 </div>
