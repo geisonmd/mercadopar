@@ -80,8 +80,8 @@ $liquido_letras = guaraniesALetras($liquido);
             font-family: 'Inter', Arial, sans-serif;
             font-size: 13px;
             max-width: 780px;
-            margin: 30px auto;
-            padding: 0 24px;
+            margin: 40px auto;
+            padding: 0 40px;
             color: #1f2937;
         }
         .no-print { margin-bottom: 24px; display: flex; gap: 10px; }
@@ -97,58 +97,61 @@ $liquido_letras = guaraniesALetras($liquido);
             display: inline-flex; align-items: center;
         }
         /* Logo */
-        .recibo-logo { margin-bottom: 20px; }
+        .recibo-logo {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #d1d5db;
+        }
         .recibo-logo img { width: 180px; height: auto; display: block; }
 
         /* Título */
-        h1 { font-size: 20px; font-weight: 700; margin-bottom: 14px; }
+        h1 { font-size: 20px; font-weight: 700; margin-bottom: 24px; }
 
         /* Datos */
         .datos-grid {
             display: grid;
-            grid-template-columns: 110px 1fr;
-            gap: 3px 0;
-            margin-bottom: 20px;
+            grid-template-columns: 130px 1fr;
+            row-gap: 8px;
+            margin-bottom: 32px;
             font-size: 13px;
         }
         .datos-grid .lbl { color: #6b7280; font-weight: 500; }
         .datos-grid .val { color: #111827; font-weight: 400; }
 
         /* Sección */
-        .section-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+        .section-title { font-size: 15px; font-weight: 600; margin-bottom: 16px; }
 
         /* Tabla */
-        table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
         th {
-            background: #c9daf8 !important;
+            background: #f3f4f6 !important;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
-            padding: 9px 12px;
+            padding: 12px 14px;
             text-align: left;
             font-size: 12px;
             font-weight: 700;
-            color: #1e3a5f;
-            border: 1px solid #b0c8f0;
+            color: #374151;
+            border: 1px solid #e5e7eb;
         }
         td {
-            padding: 8px 12px;
-            border: 1px solid #c9daf8;
+            padding: 12px 14px;
+            border: 1px solid #e5e7eb;
             font-size: 12px;
             vertical-align: middle;
             color: #1f2937;
         }
-        tr:nth-child(even) td { background: #f8faff; }
 
         /* Totales */
-        .totales { margin-top: 4px; }
-        .totales p { font-size: 12px; color: #374151; margin-bottom: 5px; }
-        .totales .total-principal { font-size: 14px; font-weight: 700; color: #111827; }
+        .totales { margin-top: 12px; margin-bottom: 40px; }
+        .totales p { font-size: 12px; color: #374151; margin-bottom: 8px; }
+        .totales .total-principal { font-size: 14px; font-weight: 700; color: #111827; margin-bottom: 10px; }
 
         /* Firmas */
         .firma-area {
             display: flex;
             justify-content: space-between;
-            margin-top: 90px;
+            margin-top: 100px;
         }
         .firma-box { text-align: center; width: 42%; }
         .firma-line {
@@ -159,10 +162,11 @@ $liquido_letras = guaraniesALetras($liquido);
         }
 
         @media print {
+            @page { margin: 25mm 20mm; }
             .no-print { display: none !important; }
-            body { margin: 15px; padding: 0 10px; }
+            body { margin: 0; padding: 0; max-width: none; }
             th {
-                background: #c9daf8 !important;
+                background: #f3f4f6 !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
