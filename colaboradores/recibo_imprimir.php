@@ -45,27 +45,36 @@ $liquido  = (float)$r['salario_liquido'];
 $periodo  = $meses[$r['mes']] . ' ' . $r['ano'];
 
 // Número por extenso
-function guaraniesALetras(float $n): string {
-    $n = (int)round($n);
-    if ($n === 0) return 'CERO GUARANÍES';
+function numeroALetras(int $n): string {
+    if ($n === 0) return 'CERO';
     $u = ['','UNO','DOS','TRES','CUATRO','CINCO','SEIS','SIETE','OCHO','NUEVE',
           'DIEZ','ONCE','DOCE','TRECE','CATORCE','QUINCE','DIECISÉIS','DIECISIETE','DIECIOCHO','DIECINUEVE'];
     $d = ['','DIEZ','VEINTE','TREINTA','CUARENTA','CINCUENTA','SESENTA','SETENTA','OCHENTA','NOVENTA'];
     $c = ['','CIENTO','DOSCIENTOS','TRESCIENTOS','CUATROCIENTOS','QUINIENTOS','SEISCIENTOS','SETECIENTOS','OCHOCIENTOS','NOVECIENTOS'];
-    function g(int $n, $u, $d, $c): string {
+    $g = function(int $n) use ($u, $d, $c): string {
         $s = '';
         if ($n >= 100) { $s .= ($n===100?'CIEN':$c[(int)($n/100)]).' '; $n%=100; }
         if ($n >= 20)  { $s .= $d[(int)($n/10)]; if($n%10) $s.=' Y '.$u[$n%10]; $n=0; }
         if ($n > 0)    { $s .= $u[$n]; }
         return trim($s);
-    }
+    };
     $p = [];
-    if ($n>=1000000){ $m=(int)($n/1000000); $p[]=($m===1?'UN MILLÓN':g($m,$u,$d,$c).' MILLONES'); $n%=1000000; }
-    if ($n>=1000)   { $m=(int)($n/1000);    $p[]=($m===1?'MIL':g($m,$u,$d,$c).' MIL');             $n%=1000; }
-    if ($n>0)       { $p[]=g($n,$u,$d,$c); }
-    return implode(' ',$p).' GUARANÍES';
+    if ($n>=1000000){ $m=(int)($n/1000000); $p[]=($m===1?'UN MILLÓN':$g($m).' MILLONES'); $n%=1000000; }
+    if ($n>=1000)   { $m=(int)($n/1000);    $p[]=($m===1?'MIL':$g($m).' MIL');             $n%=1000; }
+    if ($n>0)       { $p[]=$g($n); }
+    return implode(' ',$p);
 }
-$liquido_letras = guaraniesALetras($liquido);
+function guaraniesALetras(float $n): string {
+    return numeroALetras((int)round($n)) . ' GUARANÍES';
+}
+function dolaresALetras(float $n): string {
+    $enteros = (int)floor($n);
+    $centavos = (int)round(($n - $enteros) * 100);
+    $txt = numeroALetras($enteros) . ' ' . ($enteros === 1 ? 'DÓLAR' : 'DÓLARES');
+    if ($centavos > 0) $txt .= ' CON ' . numeroALetras($centavos) . '/100';
+    return $txt;
+}
+$liquido_letras = $moneda === 'USD' ? dolaresALetras($liquido) : guaraniesALetras($liquido);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -235,14 +244,22 @@ $liquido_letras = guaraniesALetras($liquido);
                     — <?= number_format((float)$r['salario_bruto'], 2, '.', ',') ?> USD
                 <?php endif; ?>
             </td>
-            <td style="text-align:right"><?= number_format($bruto_gs, 0, ',', '.') ?> Gs</td>
+            <td style="text-align:right">
+                <?= $moneda === 'USD'
+                    ? number_format($bruto_gs, 2, '.', ',') . ' USD'
+                    : number_format($bruto_gs, 0, ',', '.') . ' Gs' ?>
+            </td>
             <td style="text-align:right">—</td>
         </tr>
     </tbody>
 </table>
 
 <div class="totales">
-    <p class="total-principal">Total acreditado en el mes: <?= number_format($liquido, 0, ',', '.') ?> Gs.</p>
+    <p class="total-principal">Total acreditado en el mes:
+        <?= $moneda === 'USD'
+            ? number_format($liquido, 2, '.', ',') . ' USD'
+            : number_format($liquido, 0, ',', '.') . ' Gs.' ?>
+    </p>
     <p>La suma de: <?= $liquido_letras ?>.</p>
     <?php if ($tipo_cambio_str): ?>
     <p>Tasa de cambio: <?= htmlspecialchars($tipo_cambio_str) ?> Gs. por USD.</p>
