@@ -4,7 +4,7 @@ require_login();
 
 $contrato_id = (int)($_GET['contrato_id'] ?? 0);
 $stmt = db()->prepare(
-    'SELECT ct.*, c.nome, c.cpf, c.rg, c.data_nascimento, c.endereco, c.email, c.telefone
+    'SELECT ct.*, c.nome, c.ci, c.rg, c.data_nascimento, c.endereco, c.email, c.telefone
      FROM contratos ct JOIN colaboradores c ON c.id = ct.colaborador_id
      WHERE ct.id = ?'
 );
@@ -41,7 +41,7 @@ if (!$ct) { echo 'Contrato não encontrado.'; exit; }
     <div class="section">
         <div class="section-title">Dados do Empregado</div>
         <div class="field"><span>Nome:</span> <?= htmlspecialchars($ct['nome']) ?></div>
-        <div class="field"><span>CPF:</span> <?= htmlspecialchars($ct['cpf']) ?></div>
+        <div class="field"><span>C.I.:</span> <?= htmlspecialchars($ct['ci']) ?></div>
         <div class="field"><span>RG:</span> <?= htmlspecialchars($ct['rg'] ?? '—') ?></div>
         <?php if ($ct['data_nascimento']): ?>
         <div class="field"><span>Data de Nascimento:</span> <?= date('d/m/Y', strtotime($ct['data_nascimento'])) ?></div>

@@ -16,7 +16,7 @@ if ($id) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fields = [
         'nome'            => trim($_POST['nome'] ?? ''),
-        'cpf'             => trim($_POST['cedula'] ?? ''),
+        'ci'              => trim($_POST['cedula'] ?? ''),
         'rg'              => '',
         'data_nascimento' => $_POST['data_nascimento'] ?: null,
         'email'           => trim($_POST['email'] ?? ''),
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (!$fields['nome'])          $errors[] = 'El nombre es obligatorio.';
-    if (!$fields['cpf'])           $errors[] = 'La Cédula de Identidad es obligatoria.';
+    if (!$fields['ci'])           $errors[] = 'La Cédula de Identidad es obligatoria.';
     if (!$fields['data_admissao']) $errors[] = 'La fecha de ingreso es obligatoria.';
 
     // Upload contrato PDF
@@ -67,20 +67,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!$errors) {
         if ($id) {
-            $sql = 'UPDATE colaboradores SET nome=?,cpf=?,rg=?,data_nascimento=?,email=?,telefone=?,
+            $sql = 'UPDATE colaboradores SET nome=?,ci=?,rg=?,data_nascimento=?,email=?,telefone=?,
                     endereco=?,cargo=?,departamento=?,data_admissao=?,salario=?,moneda_salario=?,status=?,contrato_pdf=?,observacoes=? WHERE id=?';
             db()->prepare($sql)->execute([
-                $fields['nome'], $fields['cpf'], $fields['rg'], $fields['data_nascimento'],
+                $fields['nome'], $fields['ci'], $fields['rg'], $fields['data_nascimento'],
                 $fields['email'], $fields['telefone'], $fields['endereco'], $fields['cargo'],
                 $fields['departamento'], $fields['data_admissao'], $fields['salario'],
                 $fields['moneda_salario'], $fields['status'], $contrato_pdf, $fields['observacoes'], $id
             ]);
         } else {
-            $sql = 'INSERT INTO colaboradores (nome,cpf,rg,data_nascimento,email,telefone,
+            $sql = 'INSERT INTO colaboradores (nome,ci,rg,data_nascimento,email,telefone,
                     endereco,cargo,departamento,data_admissao,salario,moneda_salario,status,contrato_pdf,observacoes)
                     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
             db()->prepare($sql)->execute([
-                $fields['nome'], $fields['cpf'], $fields['rg'], $fields['data_nascimento'],
+                $fields['nome'], $fields['ci'], $fields['rg'], $fields['data_nascimento'],
                 $fields['email'], $fields['telefone'], $fields['endereco'], $fields['cargo'],
                 $fields['departamento'], $fields['data_admissao'], $fields['salario'],
                 $fields['moneda_salario'], $fields['status'], $contrato_pdf, $fields['observacoes']
@@ -125,7 +125,7 @@ if (!empty($col['salario']) && (float)$col['salario'] > 0) {
             <div class="form-group">
                 <label>Cédula de Identidad *</label>
                 <input type="text" name="cedula" id="cedula-input" required
-                       value="<?= htmlspecialchars($col['cpf'] ?? '') ?>"
+                       value="<?= htmlspecialchars($col['ci'] ?? '') ?>"
                        placeholder="7.968.714">
             </div>
             <div class="form-group">
