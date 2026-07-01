@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS colaboradores (
     data_demissao DATE,
     salario DECIMAL(10,2) NOT NULL DEFAULT 0,
     status ENUM('ativo','inativo') NOT NULL DEFAULT 'ativo',
+    observacoes TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

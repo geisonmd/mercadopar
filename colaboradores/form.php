@@ -27,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'data_admissao'   => $_POST['data_admissao'] ?? '',
         'moneda_salario'  => in_array($_POST['moneda_salario'] ?? '', ['GS','USD']) ? $_POST['moneda_salario'] : 'GS',
         'status'          => in_array($_POST['status'] ?? '', ['ativo','inativo']) ? $_POST['status'] : 'ativo',
+        'observacoes'     => trim($_POST['observacoes'] ?? ''),
     ];
 
     // Parsing do salário depende da moeda:
@@ -67,22 +68,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$errors) {
         if ($id) {
             $sql = 'UPDATE colaboradores SET nome=?,cpf=?,rg=?,data_nascimento=?,email=?,telefone=?,
-                    endereco=?,cargo=?,departamento=?,data_admissao=?,salario=?,moneda_salario=?,status=?,contrato_pdf=? WHERE id=?';
+                    endereco=?,cargo=?,departamento=?,data_admissao=?,salario=?,moneda_salario=?,status=?,contrato_pdf=?,observacoes=? WHERE id=?';
             db()->prepare($sql)->execute([
                 $fields['nome'], $fields['cpf'], $fields['rg'], $fields['data_nascimento'],
                 $fields['email'], $fields['telefone'], $fields['endereco'], $fields['cargo'],
                 $fields['departamento'], $fields['data_admissao'], $fields['salario'],
-                $fields['moneda_salario'], $fields['status'], $contrato_pdf, $id
+                $fields['moneda_salario'], $fields['status'], $contrato_pdf, $fields['observacoes'], $id
             ]);
         } else {
             $sql = 'INSERT INTO colaboradores (nome,cpf,rg,data_nascimento,email,telefone,
-                    endereco,cargo,departamento,data_admissao,salario,moneda_salario,status,contrato_pdf)
-                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+                    endereco,cargo,departamento,data_admissao,salario,moneda_salario,status,contrato_pdf,observacoes)
+                    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
             db()->prepare($sql)->execute([
                 $fields['nome'], $fields['cpf'], $fields['rg'], $fields['data_nascimento'],
                 $fields['email'], $fields['telefone'], $fields['endereco'], $fields['cargo'],
                 $fields['departamento'], $fields['data_admissao'], $fields['salario'],
-                $fields['moneda_salario'], $fields['status'], $contrato_pdf
+                $fields['moneda_salario'], $fields['status'], $contrato_pdf, $fields['observacoes']
             ]);
         }
         header('Location: /colaboradores?saved=1');
@@ -201,6 +202,12 @@ if (!empty($col['salario']) && (float)$col['salario'] > 0) {
                     <small style="color:#6b7280;font-size:11px">Máximo 20 MB.</small>
                 <?php endif; ?>
             </div>
+        </div>
+
+        <h3 style="margin:24px 0 16px;font-size:15px;color:#374151">Observaciones</h3>
+        <div class="form-group">
+            <textarea name="observacoes" rows="4"
+                      placeholder="Ej: Anticipo de Gs. 1.500.000 el 13/06/2026"><?= htmlspecialchars($col['observacoes'] ?? '') ?></textarea>
         </div>
 
         <div class="form-actions">
