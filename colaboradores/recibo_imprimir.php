@@ -44,6 +44,24 @@ $bruto_gs = (float)($r['salario_gs'] ?? $r['salario_bruto']);
 $liquido  = (float)$r['salario_liquido'];
 $periodo  = $meses[$r['mes']] . ' ' . $r['ano'];
 
+// Monta todas as linhas (itens + sueldo base) e ordena por data
+$linhas = [];
+foreach ($items as $item) {
+    $linhas[] = [
+        'fecha'       => $item['fecha'] ?? '',
+        'descricao'   => $item['descripcion'],
+        'credito'     => $item['tipo'] === 'credito' ? $item['monto'] : null,
+        'debito'      => $item['tipo'] === 'debito'  ? $item['monto'] : null,
+    ];
+}
+$linhas[] = [
+    'fecha'     => $r['data_pagamento'] ?? '',
+    'descricao' => 'Sueldo base ' . $periodo . ($moneda === 'USD' ? ' — ' . number_format((float)$r['salario_bruto'], 2, '.', ',') . ' USD' : ''),
+    'credito'   => $bruto_gs,
+    'debito'    => null,
+];
+usort($linhas, fn($a, $b) => strtotime($a['fecha'] ?: '1970-01-01') <=> strtotime($b['fecha'] ?: '1970-01-01'));
+
 // Número por extenso
 function numeroALetras(int $n): string {
     if ($n === 0) return 'CERO';
@@ -220,37 +238,22 @@ $liquido_letras = $moneda === 'USD' ? dolaresALetras($liquido) : guaraniesALetra
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($items as $item): if ($item['tipo'] !== 'debito') continue; ?>
+        <?php foreach ($linhas as $linha): ?>
         <tr>
-            <td><?= $item['fecha'] ? date('d/m/Y', strtotime($item['fecha'])) : '' ?></td>
-            <td><?= htmlspecialchars($item['descripcion']) ?></td>
-            <td style="text-align:right">—</td>
-            <td style="text-align:right"><?= number_format($item['monto'], 0, ',', '.') ?> Gs</td>
-        </tr>
-        <?php endforeach; ?>
-        <?php foreach ($items as $item): if ($item['tipo'] !== 'credito') continue; ?>
-        <tr>
-            <td><?= $item['fecha'] ? date('d/m/Y', strtotime($item['fecha'])) : '' ?></td>
-            <td><?= htmlspecialchars($item['descripcion']) ?></td>
-            <td style="text-align:right"><?= number_format($item['monto'], 0, ',', '.') ?> Gs</td>
-            <td style="text-align:right">—</td>
-        </tr>
-        <?php endforeach; ?>
-        <tr>
-            <td><?= $r['data_pagamento'] ? date('d/m/Y', strtotime($r['data_pagamento'])) : '' ?></td>
-            <td>
-                Sueldo base <?= $periodo ?>
-                <?php if ($moneda === 'USD'): ?>
-                    — <?= number_format((float)$r['salario_bruto'], 2, '.', ',') ?> USD
-                <?php endif; ?>
+            <td><?= $linha['fecha'] ? date('d/m/Y', strtotime($linha['fecha'])) : '' ?></td>
+            <td><?= htmlspecialchars($linha['descricao']) ?></td>
+            <td style="text-align:right">
+                <?php if ($linha['credito'] !== null): ?>
+                    <?= $moneda === 'USD' && $linha['credito'] === $bruto_gs
+                        ? number_format($linha['credito'], 2, '.', ',') . ' USD'
+                        : number_format($linha['credito'], 0, ',', '.') . ' Gs' ?>
+                <?php else: ?>—<?php endif; ?>
             </td>
             <td style="text-align:right">
-                <?= $moneda === 'USD'
-                    ? number_format($bruto_gs, 2, '.', ',') . ' USD'
-                    : number_format($bruto_gs, 0, ',', '.') . ' Gs' ?>
+                <?= $linha['debito'] !== null ? number_format($linha['debito'], 0, ',', '.') . ' Gs' : '—' ?>
             </td>
-            <td style="text-align:right">—</td>
         </tr>
+        <?php endforeach; ?>
     </tbody>
 </table>
 
