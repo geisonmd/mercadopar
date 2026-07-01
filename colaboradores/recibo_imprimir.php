@@ -216,14 +216,14 @@ $liquido_letras = guaraniesALetras($liquido);
             <td><?= $item['fecha'] ? date('d/m/Y', strtotime($item['fecha'])) : '' ?></td>
             <td><?= htmlspecialchars($item['descripcion']) ?></td>
             <td style="text-align:right">—</td>
-            <td style="text-align:right"><?= number_format($item['monto'], 0, ',', '.') ?></td>
+            <td style="text-align:right"><?= number_format($item['monto'], 0, ',', '.') ?> Gs</td>
         </tr>
         <?php endforeach; ?>
         <?php foreach ($items as $item): if ($item['tipo'] !== 'credito') continue; ?>
         <tr>
             <td><?= $item['fecha'] ? date('d/m/Y', strtotime($item['fecha'])) : '' ?></td>
             <td><?= htmlspecialchars($item['descripcion']) ?></td>
-            <td style="text-align:right"><?= number_format($item['monto'], 0, ',', '.') ?></td>
+            <td style="text-align:right"><?= number_format($item['monto'], 0, ',', '.') ?> Gs</td>
             <td style="text-align:right">—</td>
         </tr>
         <?php endforeach; ?>
