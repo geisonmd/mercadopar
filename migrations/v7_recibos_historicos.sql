@@ -24,11 +24,11 @@ INSERT INTO recibos_salario
 VALUES (2,3,2026,1100,0,0,3000000,0,4095000,'2026-04-01','','GS',6450,7095000,
     '[{"fecha":"2026-03-14","descripcion":"Antecipo","tipo":"debito","monto":1000000},{"fecha":"2026-03-19","descripcion":"Antecipo","tipo":"debito","monto":1000000},{"fecha":"2026-03-19","descripcion":"Antecipo","tipo":"debito","monto":500000},{"fecha":"2026-03-20","descripcion":"Antecipo","tipo":"debito","monto":500000}]');
 
--- Abril 2026 (pago em USD, sin conversión)
+-- Abril 2026
 INSERT INTO recibos_salario
     (colaborador_id,mes,ano,salario_bruto,inss,irrf,outros_descontos,outros_acrescimos,
      salario_liquido,data_pagamento,observacoes,moneda,tipo_cambio,salario_gs,items_json)
-VALUES (2,4,2026,1100,0,0,0,0,1100,'2026-05-01','','USD',0,1100,'[]');
+VALUES (2,4,2026,1100,0,0,0,0,6490000,'2026-05-01','','GS',5900,6490000,'[]');
 
 -- Mayo 2026
 INSERT INTO recibos_salario
