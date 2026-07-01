@@ -16,10 +16,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $mes         = (int)($_POST['mes'] ?? 0);
     $ano         = (int)($_POST['ano'] ?? 0);
     $moneda      = in_array($_POST['moneda_recibo'] ?? '', ['GS','USD']) ? $_POST['moneda_recibo'] : 'GS';
-    $bruto       = (float)str_replace(['.', ','], ['', '.'], preg_replace('/[^0-9,.]/', '', $_POST['salario_bruto'] ?? '0'));
     $tipo_cambio = trim($_POST['tipo_cambio'] ?? '');
+    $tc_val      = (float)str_replace(',', '.', $tipo_cambio ?: '0');
     $pagamento   = $_POST['data_pagamento'] ?: null;
     $obs         = trim($_POST['observacoes'] ?? '');
+
+    // Parsing do salário base conforme moeda do colaborador
+    $salarioRaw = preg_replace('/[^0-9,.]/', '', $_POST['salario_bruto'] ?? '0');
+    if ($moneda_col === 'USD') {
+        $bruto = (float)str_replace(',', '', $salarioRaw); // "1,100.00" → 1100.00
+    } else {
+        $bruto = (float)str_replace(['.', ','], ['', '.'], $salarioRaw); // "6.710.000" → 6710000
+    }
+
+    // Converter para Gs se recibo é em GS mas salário base é USD
+    $bruto_gs = ($moneda_col === 'USD' && $moneda === 'GS' && $tc_val > 0)
+        ? round($bruto * $tc_val)
+        : $bruto;
 
     // Items
     $items = [];
@@ -33,14 +46,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
     }
 
-    // Líquido = bruto - débitos + créditos
+    // Líquido = bruto_gs - débitos + créditos (itens sempre em Gs)
     $total_debitos  = 0;
     $total_creditos = 0;
     foreach ($items as $item) {
         if ($item['tipo'] === 'debito') $total_debitos  += $item['monto'];
         else                            $total_creditos += $item['monto'];
     }
-    $liquido = $bruto + $total_creditos - $total_debitos;
+    $liquido = $bruto_gs + $total_creditos - $total_debitos;
 
     if (!$mes || !$ano) $errors[] = 'El mes y año son obligatorios.';
     if ($bruto <= 0)    $errors[] = 'El salario base debe ser mayor a cero.';
@@ -66,8 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $colaborador_id, $mes, $ano, $bruto,
                     $total_debitos, $total_creditos,
                     $liquido, $pagamento, $obs_full,
-                    $moneda, (float)str_replace(',', '.', $tipo_cambio ?: '0'),
-                    $bruto,
+                    $moneda, $tc_val,
+                    $bruto_gs,
                     json_encode($items, JSON_UNESCAPED_UNICODE)
                 ]);
             } catch (\PDOException $e) {
