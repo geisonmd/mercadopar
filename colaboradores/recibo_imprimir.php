@@ -255,7 +255,7 @@ $liquido_letras = guaraniesALetras($liquido);
 <div class="firma-area">
     <div class="firma-box">
         <div class="firma-line">
-            <strong>MercadoPar</strong><br>Empleador
+            <strong>Geison Thiago Marcon Dreon</strong><br>Gerente
         </div>
     </div>
     <div class="firma-box">
