@@ -37,7 +37,7 @@ $colaboradores = $stmt->fetchAll();
         <thead>
             <tr>
                 <th>Nombre</th><th>C.I.</th><th>Cargo</th><th>Departamento</th>
-                <th>Ingreso</th><th>Salario</th><th>Estado</th><th>Acciones</th>
+                <th>Ingreso</th><th>Estado</th><th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -48,7 +48,6 @@ $colaboradores = $stmt->fetchAll();
                 <td><?= htmlspecialchars($c['cargo'] ?? '—') ?></td>
                 <td><?= htmlspecialchars($c['departamento'] ?? '—') ?></td>
                 <td><?= date('d/m/Y', strtotime($c['data_admissao'])) ?></td>
-                <td><?= $c['salario'] > 0 ? 'Gs. ' . number_format($c['salario'], 0, ',', '.') : '—' ?></td>
                 <td><span class="badge <?= $c['status'] === 'ativo' ? 'badge-success' : 'badge-danger' ?>"><?= $c['status'] === 'ativo' ? 'Activo' : 'Inactivo' ?></span></td>
                 <td style="white-space:nowrap">
                     <a href="/colaboradores/form?id=<?= $c['id'] ?>" class="btn btn-outline btn-sm">Editar</a>
@@ -59,7 +58,7 @@ $colaboradores = $stmt->fetchAll();
                 </td>
             </tr>
         <?php endforeach; else: ?>
-            <tr><td colspan="8" style="text-align:center;color:#6b7280;padding:24px">Ningún colaborador encontrado.</td></tr>
+            <tr><td colspan="7" style="text-align:center;color:#6b7280;padding:24px">Ningún colaborador encontrado.</td></tr>
         <?php endif; ?>
         </tbody>
     </table>

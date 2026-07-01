@@ -25,10 +25,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'cargo'           => trim($_POST['cargo'] ?? ''),
         'departamento'    => trim($_POST['departamento'] ?? ''),
         'data_admissao'   => $_POST['data_admissao'] ?? '',
-        'salario'         => (float)str_replace(['.', ','], ['', '.'], preg_replace('/[^0-9,.]/', '', $_POST['salario'] ?? '0')),
         'moneda_salario'  => in_array($_POST['moneda_salario'] ?? '', ['GS','USD']) ? $_POST['moneda_salario'] : 'GS',
         'status'          => in_array($_POST['status'] ?? '', ['ativo','inativo']) ? $_POST['status'] : 'ativo',
     ];
+
+    // Parsing do salário depende da moeda:
+    // GS: formato "1.100.000" (ponto = milhar) → remove pontos, sem decimal
+    // USD: formato "1,100.00" (vírgula = milhar, ponto = decimal) → remove vírgulas
+    $salarioRaw = preg_replace('/[^0-9,.]/', '', $_POST['salario'] ?? '0');
+    if ($fields['moneda_salario'] === 'USD') {
+        $fields['salario'] = (float)str_replace(',', '', $salarioRaw);
+    } else {
+        $fields['salario'] = (float)str_replace(['.', ','], ['', '.'], $salarioRaw);
+    }
 
     if (!$fields['nome'])          $errors[] = 'El nombre es obligatorio.';
     if (!$fields['cpf'])           $errors[] = 'La Cédula de Identidad es obligatoria.';
