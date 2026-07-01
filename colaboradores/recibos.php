@@ -215,7 +215,11 @@ $salario_fmt = $moneda_col === 'USD'
                             : 'Gs. ' . number_format((float)($r['salario_gs'] ?? $r['salario_bruto']), 0, ',', '.');
                         ?>
                     </td>
-                    <td><strong>Gs. <?= number_format($r['salario_liquido'], 0, ',', '.') ?></strong></td>
+                    <td><strong>
+                        <?= $m === 'USD'
+                            ? 'USD ' . number_format($r['salario_liquido'], 2, '.', ',')
+                            : 'Gs. ' . number_format($r['salario_liquido'], 0, ',', '.') ?>
+                    </strong></td>
                     <td><?= $r['data_pagamento'] ? date('d/m/Y', strtotime($r['data_pagamento'])) : '—' ?></td>
                     <td>
                         <a href="/colaboradores/recibo_imprimir?recibo_id=<?= $r['id'] ?>"
