@@ -212,7 +212,7 @@ $salario_fmt = $moneda_col === 'USD'
                         $m = $r['moneda'] ?? 'GS';
                         echo $m === 'USD'
                             ? 'USD ' . number_format($r['salario_bruto'], 2, '.', ',')
-                            : 'Gs. ' . number_format($r['salario_bruto'], 0, ',', '.');
+                            : 'Gs. ' . number_format((float)($r['salario_gs'] ?? $r['salario_bruto']), 0, ',', '.');
                         ?>
                     </td>
                     <td><strong>Gs. <?= number_format($r['salario_liquido'], 0, ',', '.') ?></strong></td>
