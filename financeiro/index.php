@@ -81,6 +81,8 @@ $meses = ['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','
         <option value="cancelado" <?= $status==='cancelado' ? 'selected' : '' ?>>Cancelado</option>
     </select>
     <button type="submit" class="btn btn-outline">Filtrar</button>
+    <a href="/financeiro/export_csv.php?mes=<?= $mes ?>&ano=<?= $ano ?>&tipo=<?= urlencode($tipo) ?>&status=<?= urlencode($status) ?>"
+       class="btn btn-outline">⬇ Exportar CSV</a>
 </form>
 
 <div class="table-wrapper">
